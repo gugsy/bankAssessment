@@ -1,31 +1,30 @@
 package com.lithium.assessment.entities;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.UniqueConstraint;
+import java.util.Date;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class BankUser {
 
-
-    private String name;
-    private String surname;
     @Id
     private String email;
-    private ACCOUNTTYPE savingsaccount;
-    private ACCOUNTTYPE currentaccount;
+    private String name;
+    private String surname;
+    private Date dob;
 
-    public BankUser(String name, String surname, String email, ACCOUNTTYPE savingsaccount, ACCOUNTTYPE currentaccount) {
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.savingsaccount = savingsaccount;
-        this.currentaccount = currentaccount;
-    }
+
+
+
 }
