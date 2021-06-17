@@ -1,0 +1,25 @@
+Your task is to create the basic functionality as defined below. (The addition of a functional UI for user-testing will be appreciated, but not
+required)
+Their business analyst requires the following;
+Two types of account per user, ‘Savings Account’ and a ‘Current Account’
+Both accounts will allow the user to ‘Deposit’, ‘Withdraw’, and ‘Transfer money’, as well as keep a log of the Transaction History
+
+
+Class Suggestion
+1.  Bank
+2.  User
+3.  Account
+4.  Savings Account
+5.  Current Account
+
+
+Class Rejection
+
+1.  User
+(first create a user with two accounts )
+2.  Account(Interface)
+Declare methods for the accounts
+3.  Savings Account
+Define the methods appropiately
+4.  Current Account
+Define the methods appropiately
