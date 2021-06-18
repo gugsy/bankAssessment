@@ -1,3 +1,4 @@
+/*
 package com.lithium.assessment.entities;
 
 
@@ -18,9 +19,7 @@ public class Account {
 
 @Id
     private long accountNumber;
-    private ACCOUNTTYPE savingsAccount;
-    private ACCOUNTTYPE currentAccount;
-    private Date openingDate;
+     private Date openingDate;
     private Date transactionDate;
     private double currentBalance;
     private double depositAmount;
@@ -28,7 +27,21 @@ public class Account {
     private double overdraftBalance;
 
 
+    @Getter
+    @Setter
+class savingsAccount{
 
+    private double minimumDeposit;
+    private  double minimumBalance;
+}
+    @Getter
+    @Setter
+    class currentAccount{
+
+        private double maximumOverdraft;
 
 
 }
+
+}
+*/

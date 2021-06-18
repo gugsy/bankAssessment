@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import javax.transaction.Transactional;
 
 @Transactional
-public interface BankRepository extends JpaRepository<BankUser,String> {
+public interface BankUserRepository extends JpaRepository<BankUser,String> {
 
     @Query("FROM CustomerPersonalDetails WHERE licenseIDNumber = ?1")
     BankUser getByEmail(String email);

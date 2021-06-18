@@ -12,8 +12,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class BankUser {
 
     @Id
@@ -23,7 +22,9 @@ public class BankUser {
     private Date dob;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "accountNumber", nullable = false)
-
-    private Account account;
+    private SavingsAccountModel savingsAccountModel;
+    @OneToOne
+    @JoinColumn(name="accountCurrentNumber",nullable =false)
+    private CurrentAccountModel currentAccountModel;
 
 }

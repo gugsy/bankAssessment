@@ -1,19 +1,19 @@
 package com.lithium.assessment.serviceImpl;
 
 import com.lithium.assessment.entities.BankUser;
-import com.lithium.assessment.repository.BankRepository;
+import com.lithium.assessment.repository.BankUserRepository;
 import com.lithium.assessment.service.BankUserService;
 
 public class BankUserServiceImpl implements BankUserService {
 
-    private BankRepository bankRepository;
+    private BankUserRepository bankUserRepository;
 
-    public BankUserServiceImpl(BankRepository bankRepository) {
-        this.bankRepository = bankRepository;
+    public BankUserServiceImpl(BankUserRepository bankUserRepository) {
+        this.bankUserRepository = bankUserRepository;
     }
 
     @Override
     public BankUser getByEmail(String email) {
-        return bankRepository.getByEmail(email);
+        return bankUserRepository.getByEmail(email);
     }
 }
