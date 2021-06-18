@@ -21,11 +21,12 @@ public class Account {
     private ACCOUNTTYPE savingsAccount;
     private ACCOUNTTYPE currentAccount;
     private Date openingDate;
-    private Double balance;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "email", nullable = false)
+    private Date transactionDate;
+    private double currentBalance;
+    private double depositAmount;
+    private double withdrawnAmount;
+    private double overdraftBalance;
 
-    private BankUser bankUser;
 
 
 

@@ -6,9 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -23,8 +21,9 @@ public class BankUser {
     private String name;
     private String surname;
     private Date dob;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "accountNumber", nullable = false)
 
-
-
+    private Account account;
 
 }
