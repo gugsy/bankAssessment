@@ -1,5 +1,8 @@
 package com.lithium.assessment.util;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class Constants {
     private Constants(){
 
