@@ -1,13 +1,12 @@
 package com.lithium.assessment.logic;
 
-import com.lithium.assessment.entities.ACCOUNTTYPE;
-import com.lithium.assessment.entities.BankUser;
-import com.lithium.assessment.entities.CurrentAccountModel;
-import com.lithium.assessment.entities.SavingsAccountModel;
+import com.lithium.assessment.entities.*;
 import com.lithium.assessment.repository.BankUserRepository;
 import com.lithium.assessment.repository.CurrentAccountRepository;
 import com.lithium.assessment.repository.SavingsAccountRepository;
+import com.lithium.assessment.repository.TransactionHistoryRepository;
 import com.lithium.assessment.serviceImpl.BankUserServiceImpl;
+import com.lithium.assessment.serviceImpl.TransactionDetailsServiceImpl;
 import com.lithium.assessment.util.Constants;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -17,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -33,6 +34,10 @@ public class LogicFunctions {
     private SavingsAccountRepository savingsAccountRepository;
     @Autowired
     private  Constants constants;
+    @Autowired
+    private TransactionDetailsServiceImpl transactionDetailsService;
+    @Autowired
+    private TransactionHistoryRepository transactionHistoryRepository;
 
     private static final Logger log = (Logger) LoggerFactory.getLogger(LogicFunctions.class);
 
@@ -40,13 +45,16 @@ public class LogicFunctions {
     BankUser bankUser = new BankUser();
     SavingsAccountModel savingsAccount = new SavingsAccountModel();
     CurrentAccountModel currentAccount = new CurrentAccountModel();
+    TransactionDetails transactionDetails = new TransactionDetails();
 
-    public LogicFunctions(BankUserServiceImpl bankUserService, BankUserRepository bankUserRepository, CurrentAccountRepository currentAccountRepository, SavingsAccountRepository savingsAccountRepository, Constants constants) {
+    public LogicFunctions(BankUserServiceImpl bankUserService, BankUserRepository bankUserRepository, CurrentAccountRepository currentAccountRepository, SavingsAccountRepository savingsAccountRepository, Constants constants, TransactionHistoryRepository transactionHistoryRepository, TransactionHistoryRepository transactionHistoryRepository1) {
         this.bankUserService = bankUserService;
         this.bankUserRepository = bankUserRepository;
         this.currentAccountRepository = currentAccountRepository;
         this.savingsAccountRepository = savingsAccountRepository;
         this.constants = constants;
+        this.transactionHistoryRepository = transactionHistoryRepository1;
+        this.transactionDetailsService = transactionDetailsService;
     }
 
     public Map<String,Object> openAccount(Map<String,Object>userInfo) throws ParseException {
@@ -108,6 +116,8 @@ public class LogicFunctions {
             log.info("About to save new user {}", bankUser.toString());
             bankUserRepository.save(bankUser);
 
+
+
         }
         }
 
@@ -120,6 +130,7 @@ public class LogicFunctions {
         JSONObject jsonObject = new JSONObject(withdrawInformation);
         log.info("information on withdrawal amount");
         Map<String,Object> savingsWithdraw = jsonObject.getJSONObject("withdrawalInformation").toMap();
+        String account =savingsWithdraw.get("accountType").toString();
         ACCOUNTTYPE accounttype = ACCOUNTTYPE.valueOf(savingsWithdraw.get("accountType").toString());
         double overdraftAmount = -100000;
         String email = savingsWithdraw.get("email").toString();
@@ -139,6 +150,16 @@ public class LogicFunctions {
 
             //update currentBalance
             //save transaction to transaction history
+            transactionDetails = new TransactionDetails();
+            transactionDetails.setEmail(email);
+            transactionDetails.setLocalDate(LocalDate.now());
+            transactionDetails.setAccountType(ACCOUNTTYPE.valueOf(account));
+            transactionDetails.setAccountNumber(savingsAccount.getAccountSavingsNumber());
+            transactionDetails.setOpeningBalance(currentBalance);
+            transactionDetails.setDeposit(90);
+            transactionDetails.setWithdrawal(amountToWithdraw);
+            transactionDetails.setBalance(availableBalance);
+            transactionHistoryRepository.save(transactionDetails);
 
         }
         else{
@@ -158,6 +179,16 @@ public class LogicFunctions {
                 currentAccount.setCurrentBalance(afterBalance);
                 currentAccountRepository.save(currentAccount);
                 //save to tranactionhistory
+                transactionDetails = new TransactionDetails();
+                transactionDetails.setEmail(email);
+                transactionDetails.setLocalDate(LocalDate.now());
+                transactionDetails.setAccountType(ACCOUNTTYPE.valueOf(account));
+                transactionDetails.setAccountNumber(currentAccount.getAccountCurrentNumber());
+                transactionDetails.setOpeningBalance(currentBalance);
+                transactionDetails.setDeposit(90);
+                transactionDetails.setWithdrawal(amountToWithdraw);
+                transactionDetails.setBalance(afterBalance);
+                transactionHistoryRepository.save(transactionDetails);
             }
 
 
@@ -169,7 +200,18 @@ public class LogicFunctions {
                 currentAccountRepository.save(currentAccount);
 
                 //update account
+                log.info("About to save transaction details");
                 //save transaction history
+                transactionDetails = new TransactionDetails();
+                transactionDetails.setTransactionId(1212);
+                transactionDetails.setEmail(email);
+                transactionDetails.setLocalDate(LocalDate.now());
+                transactionDetails.setAccountType(ACCOUNTTYPE.valueOf(account));
+                transactionDetails.setOpeningBalance(currentBalance);
+                transactionDetails.setDeposit(90);
+                transactionDetails.setWithdrawal(amountToWithdraw);
+                transactionDetails.setBalance(afterBalance);
+                transactionHistoryRepository.save(transactionDetails);
 
             }else
                 log.info("Insufficient Funds");
@@ -198,6 +240,16 @@ public class LogicFunctions {
             currentAccountRepository.save(currentAccount);
 
             //save to transaction history
+            transactionDetails = new TransactionDetails();
+            transactionDetails.setEmail(email);
+            transactionDetails.setLocalDate(LocalDate.now());
+            transactionDetails.setAccountType(accounttype);
+            transactionDetails.setAccountNumber(currentAccount.getAccountCurrentNumber());
+            transactionDetails.setOpeningBalance(currentBalance);
+            transactionDetails.setDeposit(amountToDeposit);
+            transactionDetails.setWithdrawal(0);
+            transactionDetails.setBalance(avaliableBalance);
+            transactionHistoryRepository.save(transactionDetails);
 
         }
 
@@ -210,6 +262,16 @@ public class LogicFunctions {
             savingsAccount.setCurrentBalance(avaliableBalance);
             savingsAccountRepository.save(savingsAccount);
             //save to transaction history
+            transactionDetails = new TransactionDetails();
+            transactionDetails.setEmail(email);
+            transactionDetails.setLocalDate(LocalDate.now());
+            transactionDetails.setAccountType(accounttype);
+            transactionDetails.setAccountNumber(savingsAccount.getAccountSavingsNumber());
+            transactionDetails.setOpeningBalance(currentBalance);
+            transactionDetails.setDeposit(amountToDeposit);
+            transactionDetails.setWithdrawal(0);
+            transactionDetails.setBalance(avaliableBalance);
+            transactionHistoryRepository.save(transactionDetails);
 
 
 
@@ -217,5 +279,37 @@ public class LogicFunctions {
 
 
 
+
+
     }
+
+    public List<TransactionDetails> getTransactionHistory(String email) {
+        log.info("This is the received email to be used to retrieve {}",email);
+        List<TransactionDetails> retrievedList = transactionDetailsService.getByEmail(email);
+        List<TransactionDetails> finalList = new ArrayList<>();
+        log.info("This is the retrieved list size {}",retrievedList.size());
+        for (TransactionDetails td:retrievedList
+             ) {
+            finalList.add(td);
+
+
+        }
+        return finalList;
+    }
+
+   /* public TransactionDetails setTransactionDetails(BankUser bankUser){
+        transactionDetails = new TransactionDetails();
+        transactionDetails.setTransactionId(1212);
+        transactionDetails.setEmail(bankUser.getEmail());
+        transactionDetails.setLocalDate(LocalDate.now());
+        transactionDetails.setAccountType(accounttype);
+        transactionDetails.setOpeningBalance(currentBalance);
+        transactionDetails.setDeposit(90);
+        transactionDetails.setWithdrawal(amountToWithdraw);
+        transactionDetails.setBalance(afterBalance);
+        return transactionHistoryRepository.save(transactionDetails);
+
+
+    }*/
+
 }

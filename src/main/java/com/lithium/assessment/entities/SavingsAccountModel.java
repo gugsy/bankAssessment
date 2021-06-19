@@ -35,9 +35,6 @@ public class SavingsAccountModel {
     private double minimumDeposit;
     @Column(name = "minimumBalance")
     private  double minimumBalance;
-    /*@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "email", nullable = false)
-    private BankUser bankUser;
-*/
+
 
 }
