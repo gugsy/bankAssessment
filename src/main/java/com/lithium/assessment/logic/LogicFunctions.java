@@ -5,6 +5,8 @@ import com.lithium.assessment.entities.BankUser;
 import com.lithium.assessment.entities.CurrentAccountModel;
 import com.lithium.assessment.entities.SavingsAccountModel;
 import com.lithium.assessment.repository.BankUserRepository;
+import com.lithium.assessment.repository.CurrentAccountRepository;
+import com.lithium.assessment.repository.SavingsAccountRepository;
 import com.lithium.assessment.serviceImpl.BankUserServiceImpl;
 import com.lithium.assessment.util.Constants;
 import org.json.JSONObject;
@@ -26,6 +28,10 @@ public class LogicFunctions {
     @Autowired
     private BankUserRepository bankUserRepository;
     @Autowired
+    private CurrentAccountRepository currentAccountRepository;
+    @Autowired
+    private SavingsAccountRepository savingsAccountRepository;
+    @Autowired
     private  Constants constants;
 
     private static final Logger log = (Logger) LoggerFactory.getLogger(LogicFunctions.class);
@@ -35,9 +41,11 @@ public class LogicFunctions {
     SavingsAccountModel savingsAccount = new SavingsAccountModel();
     CurrentAccountModel currentAccount = new CurrentAccountModel();
 
-    public LogicFunctions(BankUserServiceImpl bankUserService, BankUserRepository bankUserRepository, Constants constants) {
+    public LogicFunctions(BankUserServiceImpl bankUserService, BankUserRepository bankUserRepository, CurrentAccountRepository currentAccountRepository, SavingsAccountRepository savingsAccountRepository, Constants constants) {
         this.bankUserService = bankUserService;
         this.bankUserRepository = bankUserRepository;
+        this.currentAccountRepository = currentAccountRepository;
+        this.savingsAccountRepository = savingsAccountRepository;
         this.constants = constants;
     }
 
@@ -125,11 +133,17 @@ public class LogicFunctions {
         if(availableBalance > 1000){
 
             log.info("Available balance to be updated {}",availableBalance);
-            //savingsAccount.setCurrentBalance(availableBalance);
+            savingsAccount.setCurrentBalance(availableBalance);
+            log.info("About to update current balance");
+            savingsAccountRepository.save(savingsAccount);
 
             //update currentBalance
             //save transaction to transaction history
 
+        }
+        else{
+
+            log.info("insufficient funds");
         }
         }
 
@@ -141,6 +155,8 @@ public class LogicFunctions {
                 double afterBalance = currentBalance-amountToWithdraw;
                 log.info("Balance after withdrawing {}",afterBalance);
                 //update currentbalance
+                currentAccount.setCurrentBalance(afterBalance);
+                currentAccountRepository.save(currentAccount);
                 //save to tranactionhistory
             }
 
@@ -149,6 +165,8 @@ public class LogicFunctions {
 
                 double afterBalance = (-currentBalance)+overdraftAmount+amountToWithdraw;
                 log.info("Balance after withdrawing {}",afterBalance);
+                currentAccount.setCurrentBalance(afterBalance);
+                currentAccountRepository.save(currentAccount);
 
                 //update account
                 //save transaction history
@@ -176,6 +194,9 @@ public class LogicFunctions {
             Double avaliableBalance = currentBalance + amountToDeposit;
             log.info("Available balance after deposit {}",avaliableBalance);
             //update balance
+            currentAccount.setCurrentBalance(avaliableBalance);
+            currentAccountRepository.save(currentAccount);
+
             //save to transaction history
 
         }
@@ -186,6 +207,8 @@ public class LogicFunctions {
             Double avaliableBalance = currentBalance + amountToDeposit;
             log.info("Available balance after deposit {}",avaliableBalance);
             //update balance
+            savingsAccount.setCurrentBalance(avaliableBalance);
+            savingsAccountRepository.save(savingsAccount);
             //save to transaction history
 
 
