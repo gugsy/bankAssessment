@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -21,7 +22,7 @@ public class BankUser {
     @Column(name = "surname")
     private String surname;
     @Column(name = "dob")
-    private Date dob;
+    private LocalDate dob;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "accountSavingsNumber", nullable = false)
     private SavingsAccountModel savingsAccountModel;

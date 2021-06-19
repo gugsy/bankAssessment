@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +63,9 @@ public class LogicFunctions {
         JSONObject obj = new JSONObject(userInfo);
         Map<String,Object> userinfo = obj.getJSONObject("personalInfo").toMap();
         log.info("This is the map with personal infor {}",userinfo);
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String dob = userinfo.get("dob").toString();
+        LocalDate date = LocalDate.parse(dob,df);
         Map<String, Object> savingsInfo = obj.getJSONObject("savingsInfo").toMap();
         String depositAmount = savingsInfo.get("depositAmount").toString();
         Double depositedAmount = Double.valueOf(depositAmount);
@@ -111,6 +115,7 @@ public class LogicFunctions {
             bankUser.setEmail(userinfo.get("email").toString());
             bankUser.setSurname(userinfo.get("surname").toString());
             bankUser.setName(userinfo.get("name").toString());
+            bankUser.setDob(date);
             bankUser.setCurrentAccountModel(currentAccount);
             bankUser.setSavingsAccountModel(savingsAccount);
             log.info("About to save new user {}", bankUser.toString());
@@ -119,6 +124,8 @@ public class LogicFunctions {
 
 
         }
+            else
+                log.info("amount not enough");
         }
 
         return  successResponse;
@@ -192,7 +199,7 @@ public class LogicFunctions {
             }
 
 
-            else if(amountToWithdraw <= balanceEnquired){
+            else if(amountToWithdraw <= (currentBalance-overdraftAmount)){
 
                 double afterBalance = (-currentBalance)+overdraftAmount+amountToWithdraw;
                 log.info("Balance after withdrawing {}",afterBalance);
@@ -294,7 +301,7 @@ public class LogicFunctions {
 
 
         }
-        return finalList;
+        return retrievedList;
     }
 
    /* public TransactionDetails setTransactionDetails(BankUser bankUser){
