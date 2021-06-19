@@ -1,5 +1,6 @@
 package com.lithium.assessment.logic;
 
+import com.lithium.assessment.entities.ACCOUNTTYPE;
 import com.lithium.assessment.entities.BankUser;
 import com.lithium.assessment.entities.CurrentAccountModel;
 import com.lithium.assessment.entities.SavingsAccountModel;
@@ -99,9 +100,99 @@ public class LogicFunctions {
             log.info("About to save new user {}", bankUser.toString());
             bankUserRepository.save(bankUser);
 
-        }}
+        }
+        }
 
         return  successResponse;
+
+    }
+
+    public void withdrawFromSavings(Map<String, Object> withdrawInformation) {
+
+        JSONObject jsonObject = new JSONObject(withdrawInformation);
+        log.info("information on withdrawal amount");
+        Map<String,Object> savingsWithdraw = jsonObject.getJSONObject("withdrawalInformation").toMap();
+        ACCOUNTTYPE accounttype = ACCOUNTTYPE.valueOf(savingsWithdraw.get("accountType").toString());
+        double overdraftAmount = -100000;
+        String email = savingsWithdraw.get("email").toString();
+        String amountWithdrawn = savingsWithdraw.get("amountWithdrawn").toString();
+        Double amountToWithdraw = Double.valueOf(amountWithdrawn);
+        BankUser bankUser = bankUserService.getByEmail(email);
+        if(accounttype.equals(ACCOUNTTYPE.SAVINGSACCOUNT)){
+        savingsAccount = bankUser.getSavingsAccountModel();
+        Double currentBalance = savingsAccount.getCurrentBalance();
+        double availableBalance = currentBalance - amountToWithdraw;
+        if(availableBalance > 1000){
+
+            log.info("Available balance to be updated {}",availableBalance);
+            //savingsAccount.setCurrentBalance(availableBalance);
+
+            //update currentBalance
+            //save transaction to transaction history
+
+        }
+        }
+
+        else if (accounttype.equals(ACCOUNTTYPE.CURRENTACCOUNT)){
+            currentAccount = bankUser.getCurrentAccountModel();
+            double currentBalance = currentAccount.getCurrentBalance();
+            double balanceEnquired = currentBalance- overdraftAmount;
+            if(currentBalance -amountToWithdraw >0){
+                double afterBalance = currentBalance-amountToWithdraw;
+                log.info("Balance after withdrawing {}",afterBalance);
+                //update currentbalance
+                //save to tranactionhistory
+            }
+
+
+            else if(amountToWithdraw <= balanceEnquired){
+
+                double afterBalance = (-currentBalance)+overdraftAmount+amountToWithdraw;
+                log.info("Balance after withdrawing {}",afterBalance);
+
+                //update account
+                //save transaction history
+
+            }else
+                log.info("Insufficient Funds");
+
+            }
+            //transaction not possible
+        }
+        
+
+
+    public void depositMoney(Map<String, Object> depositInformation) {
+        JSONObject jsonObject = new JSONObject(depositInformation);
+        Map<String,Object>depositInfo = jsonObject.getJSONObject("depositInformation").toMap();
+        ACCOUNTTYPE accounttype = ACCOUNTTYPE.valueOf(depositInfo.get("accountType").toString());
+        String email = depositInfo.get("email").toString();
+        String amountDeposited = depositInfo.get("amountDeposited").toString();
+        Double amountToDeposit = Double.valueOf(amountDeposited);
+        BankUser bankUser  = bankUserService.getByEmail(email);
+        if(accounttype.equals(ACCOUNTTYPE.CURRENTACCOUNT)){
+            currentAccount = bankUser.getCurrentAccountModel();
+            Double currentBalance = currentAccount.getCurrentBalance();
+            Double avaliableBalance = currentBalance + amountToDeposit;
+            log.info("Available balance after deposit {}",avaliableBalance);
+            //update balance
+            //save to transaction history
+
+        }
+
+        else if(accounttype.equals(ACCOUNTTYPE.SAVINGSACCOUNT)){
+            savingsAccount = bankUser.getSavingsAccountModel();
+            Double currentBalance = savingsAccount.getCurrentBalance();
+            Double avaliableBalance = currentBalance + amountToDeposit;
+            log.info("Available balance after deposit {}",avaliableBalance);
+            //update balance
+            //save to transaction history
+
+
+
+        }
+
+
 
     }
 }

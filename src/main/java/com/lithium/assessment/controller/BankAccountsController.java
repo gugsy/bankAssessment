@@ -25,9 +25,30 @@ public class BankAccountsController {
     public String openUserAccounts(@RequestBody Map<String,Object>userinfo) throws ParseException {
         log.info("This is the received map {}",userinfo);
 
-    logicFunctions.openAccount(userinfo);
+        logicFunctions.openAccount(userinfo);
 
 
     return "Success";
+
 }
+
+@PostMapping("/withdrawFromAccount")
+    public String withdrawSavingsAccount(@RequestBody Map<String,Object>withdrawInformation){
+        log.info("Information to withdraw money from savings account {}",withdrawInformation);
+        logicFunctions.withdrawFromSavings(withdrawInformation);
+
+        return "successfully withdrawn";
+}
+
+@PostMapping("/depositIntoAccount")
+
+    public  String depositIntoAccount(@RequestBody Map<String,Object>depositInformation){
+    log.info("Information to deposit money from savings account {}",depositInformation);
+    logicFunctions.depositMoney(depositInformation);
+
+    return "successfully deposited";
+
+    }
+
+
 }
