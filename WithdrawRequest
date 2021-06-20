@@ -1,0 +1,9 @@
+{
+"withdrawalInformation":{
+"accountType" : "CURRENTACCOUNT",
+"email" : "one@gmail.com",
+"amountWithdrawn":"40000"
+
+}
+
+}

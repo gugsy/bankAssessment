@@ -73,14 +73,12 @@ public class LogicFunctions {
         log.info("This is the received json {}", userInfo);
         JSONObject obj = new JSONObject(userInfo);
         Map<String, Object> userinfo = obj.getJSONObject("personalInfo").toMap();
-        log.info("This is the map with personal infor {}", userinfo);
+        log.info("This is the map with personal information {}", userinfo);
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String dob = userinfo.get("dob").toString();
         LocalDate date = LocalDate.parse(dob, df);
-        Map<String, Object> savingsInfo = obj.getJSONObject("savingsInfo").toMap();
-        String depositAmount = savingsInfo.get("depositAmount").toString();
+         String depositAmount = userinfo.get("depositSavingsAmount").toString();
         Double depositedAmount = Double.valueOf(depositAmount);
-        Map<String, Object> currentInfo = obj.getJSONObject("currentInfo").toMap();
         Map<String, Object> successResponse = new HashMap<>();
         successResponse.put(constants.SUCCESSHEADER, constants.SUCCESSMESSAGE);
         String emailProvided = userinfo.get("email").toString();
@@ -102,7 +100,7 @@ public class LogicFunctions {
                 log.info("About to save current account information");
                 currentAccount = new CurrentAccountModel();
                 currentAccount.setAccountCurrentNumber(generateAccountNumber());
-                String currentDeposit = currentInfo.get("currentDeposit").toString();
+                String currentDeposit = userinfo.get("currentDeposit").toString();
                 currentAccount.setDepositAmount(Double.parseDouble(currentDeposit));
                 currentAccount.setOpeningDate(LocalDate.now());
                 currentAccount.setCurrentBalance(Double.parseDouble(currentDeposit));

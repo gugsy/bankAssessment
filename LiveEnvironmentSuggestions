@@ -7,4 +7,6 @@ The following implementation suggestions are made for a live environment
 5.  Implement logic for a user to be able to adjust daily limit
 6.  Add data validation measures of supplied information
 7.  Implement application with unit tests for the provided functionality
-8.  Implement CI/CD on deployment that will facilitate scalability and high avaliability and also minimising overhead costs where possible
+8.  Implement CI/CD on deployment that will facilitate scalability and high availability and also minimising overhead costs where possible
+9.  Add custom exceptions for all scenarios that occur
+10. Generate a secure algorithm to generate an account number than using a random generated number

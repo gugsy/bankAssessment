@@ -1,0 +1,10 @@
+{"personalInfo":{
+"name" : "Testing1",
+"surname" : "Test",
+"email" : "two@gmail.com",
+"dob" : "01-01-1980",
+"depositSavingsAmount" : "1100",
+"currentDeposit" : "10000"
+}
+
+}
