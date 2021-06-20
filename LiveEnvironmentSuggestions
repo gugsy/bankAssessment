@@ -1,0 +1,10 @@
+The following implementation suggestions are made for a live environment
+
+1.  Using awt tokens for each bank transaction session
+2.  Use MFA for accessing a bank account
+3.  Implement encryption for data at rest, in transit and in use
+4.  Implement logic to temporarily halt transactions from the user's interface
+5.  Implement logic for a user to be able to adjust daily limit
+6.  Add data validation measures of supplied information
+7.  Implement application with unit tests for the provided functionality
+8.  Implement CI/CD on deployment that will facilitate scalability and high avaliability and also minimising overhead costs where possible

@@ -11,15 +11,15 @@ Class Suggestion
 3.  Account
 4.  Savings Account
 5.  Current Account
+6.  TransactionDetails
 
 
 Class Rejection
 
-1.  User
+1.  BankUser
 (first create a user with two accounts )
-2.  Account(Interface)
-Declare methods for the accounts
-3.  Savings Account
+2.  Savings Account
 Define the methods appropiately
-4.  Current Account
+3.  Current Account
 Define the methods appropiately
+4. TransactionDetails
